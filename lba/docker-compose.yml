@@ -1,12 +1,12 @@
 version: "2.3"
 services:
   database:
-    image: "angelfernandezf/xovetic-lba-database:1.0.0"
+    image: "angelfernandezf/xovetic-lba-database:$DATABASE_VERSION"
     mem_limit: 256M
     restart: unless-stopped
     environment:
-      - POSTGRES_USER=lba
-      - POSTGRES_PASSWORD=lb4Us3r
+      - POSTGRES_USER=$DATABASE_USERNAME
+      - POSTGRES_PASSWORD=$DATABASE_PASSWORD
       - POSTGRES_DB=lba
       - POSTGRES_PORT=5432
     networks:
@@ -24,15 +24,15 @@ services:
             max-size: "30m"
 
   teams:
-    image: "angelfernandezf/xovetic-lba-teams:1.0.0"
+    image: "angelfernandezf/xovetic-lba-teams:$TEAMS_VERSION"
     mem_limit: 128M
     restart: unless-stopped
     environment:
       - JAVA_XMS=128
       - JAVA_XMX=512
-      - SPRING_DATASOURCE_USERNAME=lba
-      - SPRING_DATASOURCE_PASSWORD=lb4Us3r
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://lbadb:5432/lba?currentSchema=teams
+      - SPRING_DATASOURCE_USERNAME=$DATABASE_USERNAME
+      - SPRING_DATASOURCE_PASSWORD=$DATABASE_PASSWORD
+      - SPRING_DATASOURCE_URL=${DATABASE_URL}?currentSchema=teams
     depends_on:
       - database
     networks:
@@ -48,15 +48,15 @@ services:
             max-size: "30m"
 
   players:
-    image: "angelfernandezf/xovetic-lba-players:1.0.0"
+    image: "angelfernandezf/xovetic-lba-players:$PLAYERS_VERSION"
     mem_limit: 128M
     restart: unless-stopped
     environment:
       - JAVA_XMS=128
       - JAVA_XMX=512
-      - SPRING_DATASOURCE_USERNAME=lba
-      - SPRING_DATASOURCE_PASSWORD=lb4Us3r
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://lbadb:5432/lba?currentSchema=players
+      - SPRING_DATASOURCE_USERNAME=$DATABASE_USERNAME
+      - SPRING_DATASOURCE_PASSWORD=$DATABASE_PASSWORD
+      - SPRING_DATASOURCE_URL=${DATABASE_URL}?currentSchema=players
     depends_on:
       - database
     networks:
