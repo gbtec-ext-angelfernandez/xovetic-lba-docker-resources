@@ -1,0 +1,17 @@
+version: "2.3"
+services:
+  database:
+    ports:
+      - 5432:5432
+
+  #registry:
+    #ports:
+      #- 1111:1111
+
+  #teams:
+    #ports:
+      #- 81:8080
+
+  #players:
+    #ports:
+      #- 82:8080

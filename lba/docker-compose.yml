@@ -13,10 +13,39 @@ services:
       lba-network:
         aliases:
           - lbadb
-    ports:
-      - 5432:5432
     volumes:
       - lba-db-volume:/var/lib/postgresql/data
+    logging:
+        driver: "json-file"
+        options:
+            max-file: "5"
+            max-size: "30m"
+
+  registry:
+    image: "angelfernandezf/xovetic-lba-registry:$REGISTRY_VERSION"
+    mem_limit: 256M
+    restart: unless-stopped
+    networks:
+      lba-network:
+        aliases:
+          - lbaregistry
+          - eureka
+    logging:
+        driver: "json-file"
+        options:
+            max-file: "5"
+            max-size: "30m"
+
+  apigateway:
+    image: "angelfernandezf/xovetic-lba-apigateway:$GATEWAY_VERSION"
+    mem_limit: 256M
+    restart: unless-stopped
+    networks:
+      lba-network:
+        aliases:
+          - lbaapigateway
+    ports:
+      - 2020:8080
     logging:
         driver: "json-file"
         options:
@@ -35,12 +64,11 @@ services:
       - SPRING_DATASOURCE_URL=${DATABASE_URL}?currentSchema=teams
     depends_on:
       - database
+      - registry
     networks:
       lba-network:
         aliases:
           - lbateams
-    ports:
-      - 81:8080
     logging:
         driver: "json-file"
         options:
@@ -59,12 +87,11 @@ services:
       - SPRING_DATASOURCE_URL=${DATABASE_URL}?currentSchema=players
     depends_on:
       - database
+      - registry
     networks:
       lba-network:
         aliases:
           - lbaplayers
-    ports:
-      - 82:8080
     logging:
         driver: "json-file"
         options:
